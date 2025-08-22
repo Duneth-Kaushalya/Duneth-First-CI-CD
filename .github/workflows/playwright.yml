@@ -50,11 +50,9 @@ jobs:
     - name: Install Playwright browsers
       run: npx playwright install --with-deps
 
-    # Step 7: Run your Playwright tests with debug flags.
+    # Step 7: Run your Playwright tests. We've removed the --debug flag here.
     - name: Run Playwright tests
-      run: npx playwright test --debug
-      env:
-        PWDEBUG: 1
+      run: npx playwright test
 
     # Step 8: Upload the test report as a workflow artifact.
     - name: Upload test report
