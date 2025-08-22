@@ -43,18 +43,18 @@ jobs:
           ${{ runner.os }}-playwright-
 
     # Step 5: Install project dependencies from your package-lock.json file.
-    # This step will be much faster now.
     - name: Install dependencies
       run: npm ci
 
     # Step 6: Install the necessary Playwright browsers.
-    # This step will also be much faster.
     - name: Install Playwright browsers
       run: npx playwright install --with-deps
 
-    # Step 7: Run your Playwright tests.
+    # Step 7: Run your Playwright tests with debug flags.
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test --debug
+      env:
+        PWDEBUG: 1
 
     # Step 8: Upload the test report as a workflow artifact.
     - name: Upload test report
