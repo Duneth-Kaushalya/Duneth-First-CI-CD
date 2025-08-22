@@ -1,0 +1,50 @@
+# Name of the workflow as it will appear in the GitHub Actions UI.
+name: Playwright CI/CD
+
+# Event that triggers the workflow. Here, it runs on every push to the 'main' branch
+# and on every pull request targeting the 'main' branch.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A job is a set of steps that execute on a runner. This workflow has one job named 'test-automation'.
+jobs:
+  test-automation:
+    # The type of runner to use. 'ubuntu-latest' is a standard, fast Linux environment.
+    runs-on: ubuntu-latest
+
+    # These are the steps the runner will follow.
+    steps:
+    # Step 1: Check out your repository code.
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Step 2: Set up Node.js. Playwright requires a Node.js environment.
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # Step 3: Install all project dependencies from your package.json file.
+    - name: Install dependencies
+      run: npm ci
+
+    # Step 4: Install the necessary Playwright browsers (Chromium, Firefox, WebKit).
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+
+    # Step 5: Run your Playwright tests.
+    - name: Run Playwright tests
+      run: npx playwright test
+
+    # Step 6: Upload the test report as a workflow artifact.
+    # This allows you to download and view the report after the run.
+    - name: Upload test report
+      if: always() # Run this step even if the previous step failed.
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 7
